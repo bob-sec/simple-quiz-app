@@ -143,6 +143,13 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
             status: msg.status as QuizStatusType,
             current_question: msg.current_question,
           });
+        } else if (msg.type === "quiz_reset") {
+          // Clear all local user data so the next quiz starts fresh
+          localStorage.removeItem("quiz_user_name");
+          localStorage.removeItem("quiz_user_id");
+          setUserNameState(null);
+          setAnsweredQuestions(new Set());
+          setQuizStatus({ status: "waiting", current_question: null });
         }
       } catch {
         // ignore parse errors

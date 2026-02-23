@@ -75,4 +75,10 @@ export interface WsAnswerUpdate {
   question_id: number;
 }
 
-export type WsMessage = WsQuizState | WsAnswerUpdate;
+export interface WsReset {
+  type: "quiz_reset";
+  status: "waiting";
+  current_question: null;
+}
+
+export type WsMessage = WsQuizState | WsAnswerUpdate | WsReset;

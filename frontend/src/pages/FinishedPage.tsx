@@ -6,7 +6,7 @@ import { useQuiz } from "../context/QuizContext";
 import type { MyResults } from "../types";
 
 export default function FinishedPage() {
-  const { userId, userName, quizInfo, quizStatus } = useQuiz();
+  const { userId, userName, quizInfo } = useQuiz();
   const navigate = useNavigate();
   const [results, setResults] = useState<MyResults | null>(null);
   const [loading, setLoading] = useState(true);
@@ -21,13 +21,6 @@ export default function FinishedPage() {
       .finally(() => setLoading(false));
   }, [userId, userName, navigate]);
 
-  // If quiz gets reset, go back to welcome
-  useEffect(() => {
-    if (quizStatus.status === "waiting") {
-      navigate("/", { replace: true });
-    }
-  }, [quizStatus.status, navigate]);
-
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -38,18 +31,6 @@ export default function FinishedPage() {
 
   const correct = results?.correct_count ?? 0;
   const total = results?.total_questions ?? quizInfo?.total_questions ?? 0;
-  const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
-
-  const grade =
-    percentage === 100
-      ? { label: "パーフェクト！🎉", color: "text-yellow-400" }
-      : percentage >= 80
-      ? { label: "すごい！✨", color: "text-emerald-400" }
-      : percentage >= 60
-      ? { label: "よくできました！", color: "text-[var(--color-primary-light)]" }
-      : percentage >= 40
-      ? { label: "もう少し！", color: "text-amber-400" }
-      : { label: "次回頑張ろう！", color: "text-muted" };
 
   return (
     <div className="flex-1 flex flex-col px-4 py-8 max-w-lg mx-auto w-full">
@@ -81,44 +62,14 @@ export default function FinishedPage() {
 
         {/* Score card */}
         <div className="glass rounded-2xl p-6 mb-6 text-center">
-          <p className="text-muted text-sm mb-3">
-            {userName} さんのスコア
-          </p>
-
-          {/* Circular score */}
-          <div className="relative w-36 h-36 mx-auto mb-4">
-            <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-              <circle
-                cx="50"
-                cy="50"
-                r="42"
-                fill="none"
-                stroke="rgba(255,255,255,0.06)"
-                strokeWidth="8"
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r="42"
-                fill="none"
-                stroke="var(--color-primary)"
-                strokeWidth="8"
-                strokeLinecap="round"
-                strokeDasharray={`${2 * Math.PI * 42}`}
-                strokeDashoffset={`${2 * Math.PI * 42 * (1 - percentage / 100)}`}
-                className="transition-all duration-1000 ease-out"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-black">{correct}</span>
-              <span className="text-muted text-xs">/ {total} 問</span>
-            </div>
+          <p className="text-muted text-sm mb-4">{userName} さんのスコア</p>
+          <div className="flex items-baseline justify-center gap-2">
+            <span className="text-6xl font-black text-[var(--color-primary-light)]">
+              {correct}
+            </span>
+            <span className="text-2xl text-muted font-medium">/ {total} 問</span>
           </div>
-
-          <p className={`text-2xl font-black mb-1 ${grade.color}`}>
-            {grade.label}
-          </p>
-          <p className="text-muted text-sm">正解率 {percentage}%</p>
+          <p className="text-muted text-sm mt-2">正解</p>
         </div>
 
         {/* Per-question breakdown */}
@@ -157,8 +108,7 @@ export default function FinishedPage() {
                         </span>
                         {!ans.is_correct && ans.correct_answer && (
                           <span className="text-muted">
-                            {" "}
-                            → 正解: {ans.correct_answer}
+                            {" "}→ 正解: {ans.correct_answer}
                           </span>
                         )}
                       </p>
@@ -170,10 +120,10 @@ export default function FinishedPage() {
         )}
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => window.close()}
           className="w-full py-4 rounded-xl border border-border text-muted hover:border-white/30 hover:text-white transition-colors font-medium"
         >
-          トップに戻る
+          閉じる
         </button>
       </div>
     </div>

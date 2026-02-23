@@ -388,12 +388,17 @@ async def admin_reset_quiz(
     await redis.set("quiz:status", "waiting")
     await redis.delete("quiz:current_question")
 
-    # Clear all user answers (keep registrations)
+    # Clear all user data (answers + names + user set)
     users = await redis.smembers("users")
     for user_id in users:
         await redis.delete(f"user:{user_id}:answers")
+        await redis.delete(f"user:{user_id}:name")
+    await redis.delete("users")
 
-    await _broadcast_state(redis)
+    # Broadcast a dedicated reset event so clients can clear local state
+    await manager.broadcast(
+        {"type": "quiz_reset", "status": "waiting", "current_question": None}
+    )
     return {"success": True}
 
 
