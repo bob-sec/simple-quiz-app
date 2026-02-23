@@ -33,10 +33,35 @@ const QuizContext = createContext<QuizContextValue | null>(null);
 //  User ID (persisted in localStorage)
 // ─────────────────────────────────────────────────────────────
 
+function generateUUID(): string {
+  // crypto.randomUUID() requires a secure context (HTTPS or localhost).
+  // Fall back to crypto.getRandomValues() which works over plain HTTP too.
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+    bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant bits
+    return [...bytes]
+      .map((b, i) => {
+        const h = b.toString(16).padStart(2, "0");
+        return [4, 6, 8, 10].includes(i) ? `-${h}` : h;
+      })
+      .join("");
+  }
+  // Last-resort fallback (Math.random based)
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
 function getOrCreateUserId(): string {
   let id = localStorage.getItem("quiz_user_id");
   if (!id) {
-    id = crypto.randomUUID();
+    id = generateUUID();
     localStorage.setItem("quiz_user_id", id);
   }
   return id;
@@ -78,12 +103,20 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
 
   // ── Fetch quiz info (once) ─────────────────────────────────
   useEffect(() => {
-    getQuizInfo().then((info) => {
-      setQuizInfo(info);
-      applyTheme(info.theme_color);
-    });
+    getQuizInfo()
+      .then((info) => {
+        setQuizInfo(info);
+        applyTheme(info.theme_color);
+      })
+      .catch(() => {
+        // Backend not ready yet; default theme stays
+      });
 
-    getQuizStatus().then(setQuizStatus);
+    getQuizStatus()
+      .then(setQuizStatus)
+      .catch(() => {
+        // Keep default "waiting" status
+      });
   }, []);
 
   // ── WebSocket connection ───────────────────────────────────
@@ -98,14 +131,13 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     ws.onopen = () => setIsConnected(true);
     ws.onclose = () => {
       setIsConnected(false);
-      // Reconnect after 3 seconds
       reconnectTimeoutRef.current = setTimeout(connectWs, 3000);
     };
     ws.onerror = () => ws.close();
 
     ws.onmessage = (event) => {
       try {
-        const msg: WsMessage = JSON.parse(event.data);
+        const msg: WsMessage = JSON.parse(event.data as string);
         if (msg.type === "quiz_state") {
           setQuizStatus({
             status: msg.status as QuizStatusType,
