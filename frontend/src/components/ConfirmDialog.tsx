@@ -26,28 +26,34 @@ export default function ConfirmDialog({
       />
 
       {/* Dialog */}
-      <div className="relative w-full max-w-sm glass rounded-2xl p-6 animate-slide-up shadow-2xl">
-        <h3 className="text-lg font-bold text-center mb-4">回答の確認</h3>
+      <div className="relative w-full max-w-sm glass rounded-2xl overflow-hidden animate-slide-up shadow-2xl">
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4">
+          <h3 className="text-lg font-bold text-center">回答の確認</h3>
+          <p className="text-muted text-sm text-center mt-1">
+            以下の選択肢で回答しますか？
+          </p>
+        </div>
 
-        <p className="text-muted text-sm text-center mb-4">
-          以下の選択肢で回答しますか？
-        </p>
-
-        {/* Choice preview */}
-        <div className="rounded-xl overflow-hidden border border-[var(--color-primary)] mb-6">
+        {/* Choice preview — image and label are strictly stacked, never overlapping */}
+        <div className="border-t border-b border-[var(--color-primary)]/30 mb-5">
           {choiceImage && (
-            <img
-              src={choiceImage}
-              alt={choiceLabel}
-              className="w-full h-32 object-cover"
-            />
+            /* Wrapper maintains 4:3 aspect ratio; object-contain shows full image */
+            <div className="w-full aspect-[4/3] bg-black/20 overflow-hidden">
+              <img
+                src={choiceImage}
+                alt={choiceLabel}
+                className="w-full h-full object-contain"
+              />
+            </div>
           )}
-          <div className="p-3 text-center font-bold text-[var(--color-primary)]">
+          <div className="px-4 py-3 text-center font-bold text-[var(--color-primary-light)] bg-[var(--color-primary)]/5">
             {choiceLabel}
           </div>
         </div>
 
-        <div className="flex gap-3">
+        {/* Actions */}
+        <div className="flex gap-3 px-6 pb-6">
           <button
             onClick={onCancel}
             disabled={isSubmitting}

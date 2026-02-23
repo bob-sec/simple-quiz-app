@@ -6,6 +6,10 @@ export interface QuizInfo {
   title: string;
   theme_color: string;
   total_questions: number;
+  /** Path to custom icon shown on the welcome page (e.g. "/images/welcome.png") */
+  welcome_image?: string | null;
+  /** Path to custom icon shown on the finished page (e.g. "/images/finished.png") */
+  finished_image?: string | null;
 }
 
 export type QuizStatusType = "waiting" | "active" | "paused" | "finished";
@@ -46,6 +50,8 @@ export interface MyResults {
   correct_count: number;
   total_questions: number;
   answers: Record<string, UserAnswer>;
+  /** All questions in order, used to display unanswered questions too */
+  questions?: Array<{ id: number; title: string }>;
 }
 
 // Admin types

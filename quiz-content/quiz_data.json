@@ -1,6 +1,10 @@
 {
   "quiz_title": "クイズ大会 2024",
   "theme_color": "#7C3AED",
+
+  "welcome_image": "",
+  "finished_image": "",
+
   "questions": [
     {
       "id": 0,

@@ -165,6 +165,8 @@ async def quiz_info():
         "title": QUIZ_DATA.get("quiz_title", "Quiz"),
         "theme_color": QUIZ_DATA.get("theme_color", "#6366F1"),
         "total_questions": TOTAL_QUESTIONS,
+        "welcome_image": QUIZ_DATA.get("welcome_image") or None,
+        "finished_image": QUIZ_DATA.get("finished_image") or None,
     }
 
 
@@ -288,6 +290,10 @@ async def my_results(user_id: str, redis: aioredis.Redis = Depends(get_redis)):
         "correct_count": correct_count,
         "total_questions": TOTAL_QUESTIONS,
         "answers": answers,
+        "questions": [
+            {"id": i, "title": q.get("title", f"Q{i + 1}")}
+            for i, q in enumerate(QUESTIONS)
+        ],
     }
 
 

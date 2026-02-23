@@ -37,22 +37,30 @@ export default function WelcomePage() {
       <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-5 bg-[var(--color-primary-light)] pointer-events-none" />
 
       <div className="relative w-full max-w-sm animate-slide-up">
-        {/* Logo / Icon */}
+        {/* Logo / Icon — larger, supports custom image */}
         <div className="flex justify-center mb-8">
-          <div className="w-24 h-24 rounded-3xl gradient-primary flex items-center justify-center shadow-2xl glow-primary animate-pulse-glow">
-            <svg
-              className="w-12 h-12 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
+          <div className="w-40 h-40 rounded-3xl gradient-primary flex items-center justify-center shadow-2xl glow-primary animate-pulse-glow overflow-hidden">
+            {quizInfo.welcome_image ? (
+              <img
+                src={quizInfo.welcome_image}
+                alt="welcome"
+                className="w-full h-full object-contain"
               />
-            </svg>
+            ) : (
+              <svg
+                className="w-20 h-20 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
+                />
+              </svg>
+            )}
           </div>
         </div>
 
