@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #7c3aed;
+  --color-primary-light: #9f5cff;
+  --color-primary-dark: #5b21b6;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: #080c14;
+  color: #f0f4ff;
+  min-height: 100dvh;
+  font-family: "Noto Sans JP", "Inter", sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f1829;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2d47;
+  border-radius: 3px;
+}
+
+/* Glass card effect */
+.glass {
+  background: rgba(22, 32, 51, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Primary gradient */
+.gradient-primary {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-light)
+  );
+}
+
+/* Glow effect */
+.glow-primary {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4),
+    0 0 40px rgba(124, 58, 237, 0.1);
+}
+
+/* Choice card hover */
+.choice-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+.choice-card:active {
+  transform: scale(0.97);
+}

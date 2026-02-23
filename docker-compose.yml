@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  # ── Reverse Proxy ────────────────────────────────────────────
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - ./quiz-content/images:/usr/share/nginx/quiz-images:ro
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+    networks:
+      - quiz-net
+
+  # ── Frontend (React + Nginx) ─────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+    expose:
+      - "80"
+    restart: unless-stopped
+    networks:
+      - quiz-net
+
+  # ── Backend (FastAPI) ────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+    expose:
+      - "8000"
+    volumes:
+      - ./quiz-content:/quiz-content:ro
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - quiz-net
+
+  # ── Database (Redis) ─────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    expose:
+      - "6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - quiz-net
+
+volumes:
+  redis-data:
+
+networks:
+  quiz-net:
+    driver: bridge

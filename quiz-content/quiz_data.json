@@ -1,0 +1,42 @@
+{
+  "quiz_title": "クイズ大会 2024",
+  "theme_color": "#7C3AED",
+  "questions": [
+    {
+      "id": 0,
+      "title": "第1問",
+      "body": "日本の首都はどれでしょう？",
+      "choices": [
+        { "id": "A", "image": "/images/q1_a.svg", "label": "東京" },
+        { "id": "B", "image": "/images/q1_b.svg", "label": "大阪" },
+        { "id": "C", "image": "/images/q1_c.svg", "label": "京都" },
+        { "id": "D", "image": "/images/q1_d.svg", "label": "名古屋" }
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 1,
+      "title": "第2問",
+      "body": "富士山の高さはどれでしょう？",
+      "choices": [
+        { "id": "A", "image": "/images/q2_a.svg", "label": "3,776m" },
+        { "id": "B", "image": "/images/q2_b.svg", "label": "3,500m" },
+        { "id": "C", "image": "/images/q2_c.svg", "label": "4,000m" },
+        { "id": "D", "image": "/images/q2_d.svg", "label": "3,200m" }
+      ],
+      "correct_answer": "A"
+    },
+    {
+      "id": 2,
+      "title": "第3問",
+      "body": "次のうち、哺乳類はどれでしょう？",
+      "choices": [
+        { "id": "A", "image": "/images/q3_a.svg", "label": "サーモン" },
+        { "id": "B", "image": "/images/q3_b.svg", "label": "カエル" },
+        { "id": "C", "image": "/images/q3_c.svg", "label": "イルカ" },
+        { "id": "D", "image": "/images/q3_d.svg", "label": "タコ" }
+      ],
+      "correct_answer": "C"
+    }
+  ]
+}
